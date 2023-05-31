@@ -70,13 +70,19 @@
         <br>
         <canvas id="canvas" width="640" height="480" ></canvas>
         <br>
-        <button id="saveButton">Save</button>
+        <button id="exportBtn">Export</button>
         <button id="loadButton">Load</button>
+        <br>
+        <div id="exportOptions" style="display: none;">
+          <button id="exportJsonBtn">Export as JSON</button>
+          <button id="exportImageBtn">Export as Image</button>
+        </div>
         <br>
         <canvas id="selectionCanvas" width="640" height="100"></canvas>
         <br>
         <input type="file" id="spritesheetInput">
         <script src="setup.js"></script>
+        <script src="export.js"></script>
     </body>
 
 </html>

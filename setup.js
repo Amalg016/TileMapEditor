@@ -18,7 +18,14 @@ const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 const spriteCanvas = document.getElementById("selectionCanvas");
 
-const saveButton=document.getElementById("saveButton");
+const openDialogButton = document.getElementById('open-dialog-button');
+const dialog = document.getElementById('dialog');
+const dialogWidthInput = document.getElementById('dialog-width-input');
+const dialogHeightInput = document.getElementById('dialog-height-input');
+const dialogApplyButton = document.getElementById('dialog-apply-button');
+const overlay = document.getElementById('overlay');
+
+
 const loadButton=document.getElementById("loadButton");
 
 canvas.addEventListener("click", handleMouseClick);
@@ -27,8 +34,26 @@ canvas.addEventListener("mousemove", onMouseDrag);
 canvas.addEventListener("mouseup", onMouseDragStop);
 spriteCanvas.addEventListener("click", handleMouseClickOnSelectionCanvas);
 
-saveButton.addEventListener("click",handleSaveButtonClick);
 loadButton.addEventListener("click",handleLoadButtonClick);
+let details=sessionStorage.getItem("details");
+if(!details){
+    openDialog();
+}
+else{
+    let d=JSON.parse(details);
+    console.log(d.width);
+    TILEMAP_HEIGHT=d.height;
+    TILEMAP_WIDTH=d.width;
+}
+let spriteSheetdetails=sessionStorage.getItem("Spritesheet");
+if(spriteSheetdetails)
+{
+    let det=JSON.parse(spriteSheetdetails);
+ //   handleSpritesheet(det);
+}
+
+
+
 initializeTilemap();
 redrawTileMap();
 
@@ -116,21 +141,6 @@ function handleImageSelection(tileX,tileY){
     }
 }
 
-function handleSaveButtonClick(){
-    const tilemapData=JSON.stringify(tilemap);
-    const blob=new Blob([tilemapData],{type:"application/json"});
-    const url=URL.createObjectURL(blob);
-
-    const link=document.createElement("a");
-    link.href=url;
-    link.download="tilemap.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-   // localStorage.setItem("tilemapData",tilemapData);
-    console.log("saved");
-}
 
 function handleLoadButtonClick(){
     //const savedTilemapData=localStorage.getItem("tilemapData");
@@ -227,6 +237,7 @@ for(let x=0;x<TILEMAP_WIDTH;x++){
 document.getElementById("spritesheetInput").addEventListener("change",handleSpritesheet);
 
 function handleSpritesheet(event){
+    
     const file=event.target.files[0];
     if(file){
         
@@ -240,6 +251,7 @@ function handleSpritesheet(event){
                 sprites=_sprites;
                 drawSprites();
                 console.log(file);
+               sessionStorage.setItem("Spritesheet",JSON.stringify(event));
             };
             };
             reader.src=reader.result;
@@ -346,12 +358,6 @@ function drawSprites() {
 }
 
 
-const openDialogButton = document.getElementById('open-dialog-button');
-const dialog = document.getElementById('dialog');
-const dialogWidthInput = document.getElementById('dialog-width-input');
-const dialogHeightInput = document.getElementById('dialog-height-input');
-const dialogApplyButton = document.getElementById('dialog-apply-button');
-const overlay = document.getElementById('overlay');
 
 openDialogButton.addEventListener('click', openDialog);
 dialogApplyButton.addEventListener('click', applySizeChange);
@@ -368,6 +374,7 @@ function applySizeChange() {
 
   if (newWidth >= 1 && newHeight >= 1) {
     updateTilemapSize(newWidth, newHeight);
+    sessionStorage.setItem("details",JSON.stringify({width:newWidth,height:newHeight}));
     closeDialog();
   } else {
     alert('Invalid size. Width and height must be greater than or equal to 1.');
