@@ -42,28 +42,11 @@ if(!details){
 }
 else{
     let d=JSON.parse(details);
-    console.log(d.width);
+    // console.log(d.width);
     TILEMAP_HEIGHT=d.height;
     TILEMAP_WIDTH=d.width;
 }
-// let spriteSheetdetails=sessionStorage.getItem("Spritesheet");
-// if(spriteSheetdetails)
-// {
-//     let det=JSON.parse(spriteSheetdetails);
-//    console.log(det.name);
-//    const myFile = new File( det.name,{
-//     lastModified: new Date(),
-// });
 
-// // Now let's create a DataTransfer to get a FileList
-// const dataTransfer = new DataTransfer();
-// dataTransfer.items.add(myFile);
-// fileInput.files = dataTransfer.files;
-//    spritesheetInput.value=det.name;
-//    spritesheetInput.click();
-//   // console.log(det.target.files[0]);
-//     //   handleSpritesheet(det);
-// }
 
 
 
@@ -145,15 +128,18 @@ function handleTileSelection(tileX,tileY){
 }
 
 function handleImageSelection(tileX,tileY){
+    let i=(columns*tileY)+tileX;
+    // console.log(i);
     if(selectedImg&& selectedImg.x===tileX&& selectedImg.y===tileY){
         selectedImg=null;
     }
     else{
+        if(i<sprites.length){
+            selectedImg={x:tileX,y:tileY,index:i};
+        }
        // console.log(tileX+","+tileY+","+rows+","+columns+","+((columns*tileX)+tileY));
-        selectedImg={x:tileX,y:tileY,index:(columns*tileY)+tileX};
     }
 }
-
 
 function handleLoadButtonClick(){
     //const savedTilemapData=localStorage.getItem("tilemapData");
@@ -250,8 +236,8 @@ for(let x=0;x<TILEMAP_WIDTH;x++){
 
 
 function handleSpritesheet(event){
-    console.log(spritesheetInput.files[0]);
-    const file=event.target.files[0];
+  //  console.log(spritesheetInput.files[0]);
+   const file=event.target.files[0];
     if(file){
         
         const reader=new FileReader();
@@ -263,8 +249,8 @@ function handleSpritesheet(event){
                 const _sprites=cutSprites(image);
                 sprites=_sprites;
                 drawSprites();
-                console.log(file);
-               sessionStorage.setItem("Spritesheet",JSON.stringify({name:spritesheetInput.files[0].name}));
+              //  console.log(file);
+               //sessionStorage.setItem("Spritesheet",JSON.stringify({name:spritesheetInput.files[0].name}));
             };
             };
             reader.src=reader.result;
@@ -311,18 +297,22 @@ function cutSprites(spritesheet) {
         // Create a new Image object and set its source to the data URL of the sprite
         // const sprite = new Image();
         // sprite.src = tempCanvas.toDataURL();
-  
+
         // Add the sprite to the sprites array
-        sprites.push(tempCanvas);
+       if(!isCanvasBlank(tempCanvas)){
+           sprites.push(tempCanvas);
+       }
       }
     }
-  
+ // console.log(sprites.length);
     return sprites;
   }
 
-
-
-
+  function isCanvasBlank(canvas) {
+    return !canvas.getContext('2d')
+      .getImageData(0, 0, canvas.width, canvas.height).data
+      .some(channel => channel !== 0);
+  }
 // Function to draw the sprites to the sprite selection canvas
 function drawSprites() {
   
