@@ -24,7 +24,7 @@ const dialogWidthInput = document.getElementById('dialog-width-input');
 const dialogHeightInput = document.getElementById('dialog-height-input');
 const dialogApplyButton = document.getElementById('dialog-apply-button');
 const overlay = document.getElementById('overlay');
-
+const spritesheetInput=document.getElementById("spritesheetInput");
 
 const loadButton=document.getElementById("loadButton");
 
@@ -33,6 +33,7 @@ canvas.addEventListener("mousedown", onMouseDragStart);
 canvas.addEventListener("mousemove", onMouseDrag);
 canvas.addEventListener("mouseup", onMouseDragStop);
 spriteCanvas.addEventListener("click", handleMouseClickOnSelectionCanvas);
+spritesheetInput.addEventListener("change",handleSpritesheet);
 
 loadButton.addEventListener("click",handleLoadButtonClick);
 let details=sessionStorage.getItem("details");
@@ -45,12 +46,24 @@ else{
     TILEMAP_HEIGHT=d.height;
     TILEMAP_WIDTH=d.width;
 }
-let spriteSheetdetails=sessionStorage.getItem("Spritesheet");
-if(spriteSheetdetails)
-{
-    let det=JSON.parse(spriteSheetdetails);
- //   handleSpritesheet(det);
-}
+// let spriteSheetdetails=sessionStorage.getItem("Spritesheet");
+// if(spriteSheetdetails)
+// {
+//     let det=JSON.parse(spriteSheetdetails);
+//    console.log(det.name);
+//    const myFile = new File( det.name,{
+//     lastModified: new Date(),
+// });
+
+// // Now let's create a DataTransfer to get a FileList
+// const dataTransfer = new DataTransfer();
+// dataTransfer.items.add(myFile);
+// fileInput.files = dataTransfer.files;
+//    spritesheetInput.value=det.name;
+//    spritesheetInput.click();
+//   // console.log(det.target.files[0]);
+//     //   handleSpritesheet(det);
+// }
 
 
 
@@ -156,7 +169,7 @@ function handleLoadButtonClick(){
             const reader=new FileReader();
 
             reader.onload=function(event){
-                const jsonData=event.target.result;
+                const jsonData=sessionStorage.getItem("details");
                 const data=JSON.parse(jsonData);
                 tilemap=data;
                 console.log("TileMap loaded");
@@ -234,10 +247,10 @@ for(let x=0;x<TILEMAP_WIDTH;x++){
 }
 }
 }
-document.getElementById("spritesheetInput").addEventListener("change",handleSpritesheet);
+
 
 function handleSpritesheet(event){
-    
+    console.log(spritesheetInput.files[0]);
     const file=event.target.files[0];
     if(file){
         
@@ -251,7 +264,7 @@ function handleSpritesheet(event){
                 sprites=_sprites;
                 drawSprites();
                 console.log(file);
-               sessionStorage.setItem("Spritesheet",JSON.stringify(event));
+               sessionStorage.setItem("Spritesheet",JSON.stringify({name:spritesheetInput.files[0].name}));
             };
             };
             reader.src=reader.result;
