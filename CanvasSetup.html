@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TileMapEditor</title>
+     <style>
+       canvas{
+            border:1px solid black;
+            cursor:pointer;
+        }
+        #selectionCanvas{
+            border:1px solid black;
+            cursor:pointer;
+        }
+        .selected{
+            border: 2px solid red;
+        }
+        strong{
+            align-items: center;
+            font-size: 50px;
+            text-align: center;
+            margin-left: 50vw;
+            
+        }
+        .dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  z-index: 100;
+  display: none;
+}
+
+.dialog-content {
+  text-align: center;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  display: none;
+}
+     </style>
+    </head>
+    <body>
+        <button id="open-dialog-button">New</button>
+
+<!-- The dialog box -->
+<div id="dialog" class="dialog">
+  <div class="dialog-content">
+    <h2>Enter Tilemap Size</h2>
+    <label for="dialog-width-input">Width:</label>
+    <input type="number" id="dialog-width-input" min="1" value="40">
+    <label for="dialog-height-input">Height:</label>
+    <input type="number" id="dialog-height-input" min="1" value="40">
+    <button id="dialog-apply-button">Apply</button>
+  </div>
+</div>
+
+<!-- Overlay for the dialog -->
+<div id="overlay"></div>
+
+        <strong>TileMapEditor</strong>
+        <br>
+        <canvas id="canvas" width="640" height="480" ></canvas>
+        <br>
+        <button id="saveButton">Save</button>
+        <button id="loadButton">Load</button>
+        <br>
+        <canvas id="selectionCanvas" width="640" height="100"></canvas>
+        <br>
+        <input type="file" id="spritesheetInput">
+        <script src="setup.js"></script>
+    </body>
+
+</html>
