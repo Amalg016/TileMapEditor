@@ -44,7 +44,7 @@ let lastY;
 let lastX;
 function onMouseDrag(event){
     if(!isDragging)return;
-   
+    rect=canvas.getBoundingClientRect();
     const mouseX=event.clientX-rect.left;
     const mouseY=event.clientY-rect.top;
     
@@ -55,7 +55,13 @@ function onMouseDrag(event){
     return;
     lastX=tileX;
     lastY=tileY;
-    handleMouseClick(event);
+    if(selectedImg){
+        tilemap[tileY][tileX]=selectedImg.index; 
+    }
+
+   // handleTileSelection(tileX,tileY);
+    redrawTileMap();
+  
 }
 
 function handleMouseClick(event){
